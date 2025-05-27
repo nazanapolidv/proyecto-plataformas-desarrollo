@@ -1,0 +1,15 @@
+.sesion_container {
+    display: flex;
+    align-items: anchor-center;
+}
+.btn_sesion{
+    color: #DC143C;
+    border: none;
+    font-weight: lighter;
+    cursor: pointer;
+    height: 20px;
+    margin-right: 10px;
+}
+.sesion_container img{
+    height: 30px;
+}

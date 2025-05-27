@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import ImagenPerfil from '../assets/profile.png';
+import Exit from '../assets/exit.png';
 import '../css/index.css';
+import '../css/Sesion.css';
 
 const Sesion = () => {
     const [user, setUser] = useState(null);
@@ -12,14 +14,15 @@ const Sesion = () => {
     const handleLogout = () => {
         localStorage.removeItem('user');
         setUser(null);
+        window.location.reload();
     };
 
     return (
         <div className="session">
             {user ? (
-                <div className="session_user">
-                    <img src={ImagenPerfil} alt="iniciar sesion o registrarse" />
-                    <button onClick={handleLogout}>Cerrar Sesión</button>
+                <div className="sesion_container">
+                    <button className='btn_sesion' onClick={handleLogout}>Cerrar Sesión</button>
+                    <img src={Exit} alt="Cerrar sesion" />
                 </div>
             ) : (
                 <a href="inicio-sesion.html"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></a>

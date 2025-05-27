@@ -3,6 +3,7 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import Login from "./components/Login.jsx";
 import CardEspecializaciones from "./components/CardEspecializaciones.jsx";
+import Banner from "./components/Banner.jsx";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -53,11 +54,8 @@ const App = () => {
     <>
       <Header />
       {user ? (
-        <div style={{ padding: "20px" }}>
-          <p>
-            Sesión iniciada como <strong>{user.rol}</strong> —{" "}
-            <button onClick={handleLogout}>Cerrar sesión</button>
-          </p>
+        <div>
+          <Banner />
           {renderByRole()}
           <hr />
           <div className="container_especializaciones">

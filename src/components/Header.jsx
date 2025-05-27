@@ -2,7 +2,6 @@ import '../css/Header.css';
 import '../css/index.css';
 import Sesion from './Sesion';
 import Logo from '../assets/logo-removebg-preview.png';
-import ImagenPerfil from '../assets/profile.png';
 
 const Header = () => {
     return (
@@ -18,9 +17,6 @@ const Header = () => {
                     <li><a href="contacto.html">Contacto</a></li>
                 </ul>
             </nav>
-            {/* <div className="session">
-                <a href="inicio-sesion.html"><img src={ImagenPerfil} alt="iniciar sesion o registrarse"/></a>
-            </div> */}
             <Sesion/>
         </div>
     </header>
