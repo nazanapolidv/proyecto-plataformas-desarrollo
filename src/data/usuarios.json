@@ -2,16 +2,15 @@
   {
     "email": "paciente@mail.com",
     "password": "1234",
-    "rol": "paciente"
-  },
-  {
-    "email": "medico@mail.com",
-    "password": "5678",
-    "rol": "medico"
+    "rol": "paciente",
+    "nombre": "Lionel",
+    "apellido": "Messi"
   },
   {
     "email": "admin@mail.com",
     "password": "admin",
-    "rol": "administrador"
+    "rol": "administrador",
+    "nombre": "Carlos",
+    "apellido": "López"
   }
 ]

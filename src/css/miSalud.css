@@ -1,0 +1,106 @@
+@import "tailwindcss";
+.container_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.card {
+    width: 50%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.card_image_container {
+    width: 20%;
+    background-color: #ECEFF1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card_image_container img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.card-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.card-content h3 {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.card-content p {
+    font-size: 1.3rem;
+    color: #555;
+    width: 60%;
+    text-align: center;
+}
+
+.redireccion {
+    width: 100%;
+    display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    .redireccion {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card{
+        width: 90%;
+    }
+
+    .card_image_container {
+        width: 100%;
+    }
+
+    .card_image_container img {
+        padding: 10px;
+        max-width: 75px;
+    }
+
+    .card-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .card-content p {
+        font-size: 1rem;
+        width: 80%;
+    }
+
+}

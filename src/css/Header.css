@@ -1,3 +1,4 @@
+@import "tailwindcss";
 .container_header, .container_footer{
     background-color: #ECEFF1;
     padding: 10px;

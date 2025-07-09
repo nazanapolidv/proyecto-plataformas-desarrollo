@@ -3,7 +3,7 @@ import '../css/index.css';
 
 const BannerComponent = () => {
     return (
-        <div class="main_image">
+        <div className="main_image">
             <img src={Banner} alt="Hospital Polaco"/>
         </div>
     );

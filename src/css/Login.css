@@ -1,3 +1,4 @@
+@import "tailwindcss";
 .container_inicio_sesion {
     display: flex;
     justify-content: center;
@@ -56,6 +57,11 @@
 
 input:focus {
     outline: none;
+}
+
+input{
+    background-color: #FFFFFF;
+    border: 1px solid #B0BEC5;
 }
 
 label {

@@ -25,7 +25,7 @@ const Sesion = () => {
                     <img src={Exit} alt="Cerrar sesion" />
                 </div>
             ) : (
-                <a href="inicio-sesion.html"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></a>
+                <a href="/login"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></a>
             )}    
         </div>
     )

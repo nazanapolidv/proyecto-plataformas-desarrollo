@@ -30,7 +30,7 @@ const Login = ({ onLogin }) => {
     if (usuarioEncontrado) {
       localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
       onLogin(usuarioEncontrado);
-      window.location.href = "../index.html";
+      window.location.href = "/home";
     } else {
       setError("Usuario o contraseña incorrectos");
     }
@@ -38,42 +38,45 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
-      <div class="container_inicio_sesion">
-        <div class="main_image">
-          <a href="../index.html">
-            <img src={Logo} alt="Hospital Polaco" />
-          </a>
-        </div>
-        <div>
-          <h2 class="title">Iniciar sesion</h2>
-        </div>
-        <form className="login_form" onSubmit={handleSubmit}>
-          <label for="name">Usuario</label>
-          <input
-            type="text"
-            name="email"
-            placeholder="jperez0001"
-            value={user.email}
-            onChange={handleChange}
-            required
-          />
+      <div className="h-[70vh] flex items-center justify-center">
+        <div className="container_inicio_sesion">
+          <div className="main_image">
+            <a href="/">
+              <img src={Logo} alt="Hospital Polaco" />
+            </a>
+          </div>
+          <div>
+            <h2 className="title">Iniciar sesion</h2>
+          </div>
+          <form className="login_form" onSubmit={handleSubmit}>
+            <label htmlFor="name">Usuario</label>
+            <input
+              className="border-2 border-black"
+              type="text"
+              name="email"
+              placeholder="jperez0001"
+              value={user.email}
+              onChange={handleChange}
+              required
+            />
 
-          <label for="password">Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="********"
-            value={user.password}
-            onChange={handleChange}
-            required
-          />
-          <button className="primary_button" type="submit">Iniciar sesión</button>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+            <label htmlFor="password">Contraseña</label>
+            <input
+              className="border-2 border-black"
+              type="password"
+              name="password"
+              placeholder="********"
+              value={user.password}
+              onChange={handleChange}
+              required
+            />
+            <button className="primary_button" type="submit">Iniciar sesión</button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
 
-          <p>- o -</p>
-          <a href="registro.html" class="secondary_button">Registrarse</a>
-          <p class="recuperar_contrasena">¿Olvidaste tu contraseña?</p>
-        </form>
+            <p>- o -</p>
+            <a href="/sesion" className="secondary_button">Registrarse</a>
+          </form>
+        </div>
       </div>
     </>
   );
