@@ -1,9 +1,9 @@
+import SinAuth from './SinAuth';
 import '../css/index.css';
 import '../css/MiSalud.css';
 import { useEffect, useState } from 'react';
 import profileImg from '../assets/profile.png';
 import calendarImg from '../assets/calendar.png';
-import SinAuth from './SinAuth';
 
 const MiSalud = () => {
     const [user, setUser] = useState(null);
@@ -21,11 +21,13 @@ const MiSalud = () => {
     };
 
     return (
-        <main>
-            <h2 className="title">Mi Salud</h2>
-            {user?.rol == "paciente"  ? (
+        <main className='flex flex-row items-center justify-center h-[70vh] m-auto'>
+            {user?.rol == "paciente" ? (
                 <>
-                    <h3 className="subtitle">¡Hola, <b>{user ? user.nombre : ''}</b>!</h3>
+                    <div>
+                        <h2 className="title">Mi Salud</h2>
+                        <h3 className="subtitle">¡Hola, <b>{user ? user.nombre : ''}</b>!</h3>
+                    </div>
                     <div className="container_mi_salud">
                         <div className="card_container">
                             <div className="card">

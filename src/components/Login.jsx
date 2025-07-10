@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Usuarios from "../data/usuarios.json";
 import Logo from "../assets/logo.png";
 import "../css/Login.css";
 import "../css/index.css";
 
 const Login = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     email: "",
     password: ""
@@ -23,14 +25,17 @@ const Login = ({ onLogin }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const usuarioEncontrado = Usuarios.find(
+    const savedUsers = localStorage.getItem('usuarios');
+    const usuarios = savedUsers ? JSON.parse(savedUsers) : Usuarios;
+
+    const usuarioEncontrado = usuarios.find(
       u => u.email === user.email && u.password === user.password
     );
 
     if (usuarioEncontrado) {
       localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
       onLogin(usuarioEncontrado);
-      window.location.href = "/home";
+      navigate("/home");
     } else {
       setError("Usuario o contraseña incorrectos");
     }
@@ -74,7 +79,7 @@ const Login = ({ onLogin }) => {
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             <p>- o -</p>
-            <a href="/sesion" className="secondary_button">Registrarse</a>
+            <a href="/registro" className="secondary_button">Registrarse</a>
           </form>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import historialData from "../data/historial.json";
+import SinAuth from "./SinAuth";
 
 const MiHistorial = () => {
 
@@ -18,17 +19,12 @@ const MiHistorial = () => {
 
     if (user.rol !== "paciente") {
         return (
-            <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-                <div className="bg-white p-8 rounded-xl shadow-md text-center">
-                    <h2 className="text-xl font-semibold text-red-600 mb-4">Acceso restringido</h2>
-                    <p>Por favor, inicie sesión con una cuenta de paciente para ver su historial.</p>
-                </div>
-            </main>
+            <SinAuth />
         );
     }
 
     return (
-        <main className="flex flex-col items-center min-h-screen bg-gray-50">
+        <main className="flex flex-col items-center h-[70vh] bg-gray-50">
             <section className="w-4/5 max-w-3xl">
                 <h2 className="text-2xl font-semibold text-center mb-8 text-black-700">Historial</h2>
                 <p className="text-lg text-gray-700 mb-6 text-center">

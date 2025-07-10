@@ -85,59 +85,58 @@ const listEspecialidades = ({ onAdd }) => {
     setAddForm({ nombre: '', descripcion: '' });
   };
   return (
-    <div className="p-8 min-h-screen mt-10">
-      <h2 className="text-4xl font-extrabold mb-10 text-center text-[#DC143C] drop-shadow">
-        Especialidades Médicas
-      </h2>
+    <div className="flex flex-col items-center justify-center h-[60vh] p-8 w-full">
+      <div className="w-4/5 max-w-7xl mx-auto">
+        <h2 className="text-4xl font-extrabold mb-10 text-center text-[#DC143C] drop-shadow">
+          Especialidades Médicas
+        </h2>
 
-      {/* Botón agregar */}
-      <div className="mb-6 text-center">
-        <button 
-          onClick={handleAdd}
-          className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-900 transition cursor-pointer"
-        >
-          Agregar Especialidad
-        </button>
-      </div>
-
-      {/* Formulario para agregar nueva especialidad */}
-      {isAdding && (
-        <div className="mb-8 bg-white shadow-lg rounded-2xl p-6 border border-indigo-100 max-w-md mx-auto">
-          <h3 className="text-xl font-bold text-[#DC143C] mb-4">Nueva Especialidad</h3>
-          <input
-            type="text"
-            name="nombre"
-            value={addForm.nombre}
-            onChange={handleAddInputChange}
-            className="w-full text-lg font-bold text-[#DC143C] mb-3 border-2 border-gray-300 rounded px-3 py-2"
-            placeholder="Nombre de la especialidad"
-          />
-          <textarea
-            name="descripcion"
-            value={addForm.descripcion}
-            onChange={handleAddInputChange}
-            className="w-full text-gray-600 text-base mb-4 border-2 border-gray-300 rounded px-3 py-2 resize-none"
-            placeholder="Descripción"
-            rows="4"
-          />
-          <div className="flex gap-3 justify-center">
-            <button 
-              onClick={handleSaveAdd}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium cursor-pointer"
-            >
-              Guardar
-            </button>
-            <button 
-              onClick={handleCancelAdd}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium cursor-pointer"
-            >
-              Cancelar
-            </button>
-          </div>
+        <div className="mb-6 text-center">
+          <button 
+            onClick={handleAdd}
+            className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-900 transition cursor-pointer"
+          >
+            Agregar Especialidad
+          </button>
         </div>
-      )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {isAdding && (
+          <div className="bg-white shadow-lg rounded-2xl p-6 border border-indigo-100 w-full max-w-2xl mx-auto mb-8">
+            <h3 className="text-xl font-bold text-[#DC143C] mb-4 text-center">Nueva Especialidad</h3>
+            <input
+              type="text"
+              name="nombre"
+              value={addForm.nombre}
+              onChange={handleAddInputChange}
+              className="w-full text-lg font-bold text-[#DC143C] mb-3 border-2 border-gray-300 rounded px-3 py-2"
+              placeholder="Nombre de la especialidad"
+            />
+            <textarea
+              name="descripcion"
+              value={addForm.descripcion}
+              onChange={handleAddInputChange}
+              className="w-full text-gray-600 text-base mb-4 border-2 border-gray-300 rounded px-3 py-2 resize-none"
+              placeholder="Descripción"
+              rows="4"
+            />
+            <div className="flex gap-3 justify-center">
+              <button 
+                onClick={handleSaveAdd}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium cursor-pointer"
+              >
+                Guardar
+              </button>
+              <button 
+                onClick={handleCancelAdd}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium cursor-pointer"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full">
         {especialidadesList.map((item) => (
           <div
             key={item.id}
@@ -183,13 +182,13 @@ const listEspecialidades = ({ onAdd }) => {
                 <div className="flex gap-3 mt-auto">
                   <button 
                     onClick={() => handleDelete(item.id)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium cursor-pointer"
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium cursor-pointer w-30"
                   >
                     Eliminar
                   </button>
                   <button 
                     onClick={() => handleEdit(item)}
-                    className="px-4 py-2 bg-[#005F73] text-white rounded-lg transition-colors font-medium cursor-pointer"
+                    className="px-4 py-2 bg-[#005F73] text-white rounded-lg transition-colors font-medium cursor-pointer w-40"
                   >
                     Editar
                   </button>
@@ -200,6 +199,7 @@ const listEspecialidades = ({ onAdd }) => {
         ))}
       </div>
     </div>
+  </div>
   );
 };
 
