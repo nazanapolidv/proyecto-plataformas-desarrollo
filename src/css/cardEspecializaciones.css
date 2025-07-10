@@ -21,7 +21,7 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: col;
 }
 .card {
   background-color: #ffffff;
@@ -38,7 +38,7 @@
 }
 
 .card img {
-  width: 100%;
+  max-width: 150px;
   height: auto;
   padding: 30px;
   object-fit: cover;
