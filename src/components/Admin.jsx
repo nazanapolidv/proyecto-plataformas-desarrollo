@@ -3,11 +3,7 @@ import SinAuth from "./SinAuth";
 
 const Admin = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  const isAdmin = user?.rol === 'admin' || user?.rol === 'administrador';
-  
-  console.log('🔧 Admin - User:', user);
-  console.log('🔧 Admin - User role:', user?.rol);
-  console.log('🔧 Admin - IsAdmin:', isAdmin);
+  const isAdmin = user?.rol === 'administrador';
 
   if (isAdmin) {
     return (

@@ -9,7 +9,7 @@ const CardEspecializaciones = ({nombreImg, altImg, titulo, desc}) => {
     return (
         <div className="cardEspecializaciones">
             <img src={imgSrc} alt={altImg} />
-            <div className="card-content">
+            <div className="card-especializacion-content">
                 <h3>{titulo}</h3>
                 <p>{desc}</p>
             </div>

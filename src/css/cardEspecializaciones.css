@@ -46,18 +46,22 @@
   object-fit: cover;
 }
 
-.card-content {
+.card-especializacion-content {
   padding: 15px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.card-content h3 {
+.card-especializacion-content h3 {
   font-size: 1.2rem;
   margin-bottom: 8px;
   color: #2c3e50;
 }
 
-.card-content p {
+.card-especializacion-content p {
   font-size: 0.95rem;
   color: #555;
 }
