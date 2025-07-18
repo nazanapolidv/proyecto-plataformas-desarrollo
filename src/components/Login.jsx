@@ -1,90 +1,106 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Usuarios from "../data/usuarios.json";
-import Logo from "../assets/logo.png";
-import "../css/Login.css";
-import "../css/index.css";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import Logo from '../assets/logo.png';
+import '../css/Login.css';
+import '../css/index.css';
 
-const Login = ({ onLogin }) => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState({
-    email: "",
-    password: ""
-  });
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
-  const [error, setError] = useState("");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+        try {
+            const result = await login(email, password);
+            if (result.success) {
+                navigate('/mi-salud');
+            } else {
+                setError(result.error);
+            }
+        } catch (error) {
+            setError('Error al iniciar sesión. Por favor, intenta de nuevo.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    return (
+        <>
+            <div className="h-[70vh] flex items-center justify-center">
+                <div className="container_inicio_sesion">
+                    <div className="main_image">
+                        <a href="/">
+                            <img src={Logo} alt="Hospital Polaco" />
+                        </a>
+                    </div>
+                    <div>
+                        <h2 className="title">Iniciar sesión</h2>
+                    </div>
+                    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                                {error}
+                            </div>
+                        )}
 
-    const savedUsers = localStorage.getItem('usuarios');
-    const usuarios = savedUsers ? JSON.parse(savedUsers) : Usuarios;
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                Email
+                            </label>
+                            <input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="tu@email.com"
+                                required
+                            />
+                        </div>
 
-    const usuarioEncontrado = usuarios.find(
-      u => u.email === user.email && u.password === user.password
+                        <div className="mb-6">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                                Contraseña
+                            </label>
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Tu contraseña"
+                                required
+                            />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+                            >
+                                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                            </button>
+                            <Link
+                                to="/registro"
+                                className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                            >
+                                ¿No tienes cuenta? Regístrate
+                            </Link>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </>
     );
-
-    if (usuarioEncontrado) {
-      localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
-      onLogin(usuarioEncontrado);
-      navigate("/home");
-    } else {
-      setError("Usuario o contraseña incorrectos");
-    }
-  };
-
-  return (
-    <>
-      <div className="h-[70vh] flex items-center justify-center">
-        <div className="container_inicio_sesion">
-          <div className="main_image">
-            <a href="/">
-              <img src={Logo} alt="Hospital Polaco" />
-            </a>
-          </div>
-          <div>
-            <h2 className="title">Iniciar sesion</h2>
-          </div>
-          <form className="login_form" onSubmit={handleSubmit}>
-            <label htmlFor="name">Usuario</label>
-            <input
-              className="border-2 border-black"
-              type="text"
-              name="email"
-              placeholder="jperez0001"
-              value={user.email}
-              onChange={handleChange}
-              required
-            />
-
-            <label htmlFor="password">Contraseña</label>
-            <input
-              className="border-2 border-black"
-              type="password"
-              name="password"
-              placeholder="********"
-              value={user.password}
-              onChange={handleChange}
-              required
-            />
-            <button className="primary_button" type="submit">Iniciar sesión</button>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            <p>- o -</p>
-            <a href="/registro" className="secondary_button">Registrarse</a>
-          </form>
-        </div>
-      </div>
-    </>
-  );
 };
 
 export default Login;

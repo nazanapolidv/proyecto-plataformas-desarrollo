@@ -15,7 +15,6 @@
 }
 
 .card {
-    width: 50%;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -24,6 +23,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
+    max-height: 100px;
 }
 
 .card:hover {
@@ -41,7 +42,7 @@
 }
 
 .card_image_container img {
-    max-width: 100px;
+    width: 80px;
     height: auto;
     border-radius: 10px;
 }

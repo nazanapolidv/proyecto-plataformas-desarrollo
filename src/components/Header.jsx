@@ -2,22 +2,22 @@ import '../css/Header.css';
 import '../css/index.css';
 import Sesion from './Sesion';
 import Logo from '../assets/logo-removebg-preview.png';
+import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    const isAdmin = user?.rol === 'administrador';
+    const { user, isAdmin } = useAuth();
 
     return (
         <header>
         <div className="container_header">
             <div className="logo">
-                <a href="/"><img src={Logo} alt="Logo"/></a>
+                <Link to="/"><img src={Logo} alt="Logo"/></Link>
             </div>
             <nav className="menu">
                 <ul className="menu_list">
-                    <li><a href="/">Inicio</a></li>
-                    {isAdmin ? <li><a href="/admin">Administración</a></li> : <li><a href="/mi-salud">Mi Salud</a></li>}
+                    <li><Link to="/">Inicio</Link></li>
+                    {isAdmin() ? <li><Link to="/admin">Administración</Link></li> : <li><Link to="/mi-salud">Mi Salud</Link></li>}
                 </ul>
             </nav>
             <Sesion/>

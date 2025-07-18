@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 import ImagenPerfil from '../assets/profile.png';
 import Exit from '../assets/exit.png';
 import '../css/index.css';
 import '../css/Sesion.css';
 
 const Sesion = () => {
-    const [user, setUser] = useState(null);
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) setUser(storedUser);
-    }, []);
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
-        window.location.reload();
+        logout();
+        navigate('/');
     };
 
     return (
@@ -25,7 +22,7 @@ const Sesion = () => {
                     <img src={Exit} alt="Cerrar sesion" />
                 </div>
             ) : (
-                <a href="/login"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></a>
+                <Link to="/login"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></Link>
             )}    
         </div>
     )

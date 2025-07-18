@@ -1,26 +1,31 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Logo from '../assets/logo-removebg-preview.png';
 import '../css/Index.css';
 import '../css/Registro.css';
-import usuariosData from '../data/usuarios.json';
 
 const Registro = () => {
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
-        tipoDoc: '',
-        documento: '',
-        genero: '',
-        fechaNacimiento: '',
-        telefono: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: '',
+        telefono: '',
+        direccion: '',
+        fecha_nacimiento: '',
+        dni: '',
+        obra_social: '',
+        numero_afiliado: ''
     });
-
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+    
+    const { register } = useAuth();
+    const navigate = useNavigate();
 
-    const handleInputChange = (e) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -28,69 +33,48 @@ const Registro = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccess('');
 
-        const requiredFields = ['nombre', 'apellido', 'tipoDoc', 'documento', 'genero', 'fechaNacimiento', 'telefono', 'email', 'password'];
-        const missingFields = requiredFields.filter(field => !formData[field]);
-
-        if (missingFields.length > 0) {
-            setError('Por favor completa todos los campos');
+        if (formData.password !== formData.confirmPassword) {
+            setError('Las contraseñas no coinciden');
             return;
         }
 
-        const savedUsers = localStorage.getItem('usuarios');
-        let usuarios = savedUsers ? JSON.parse(savedUsers) : usuariosData;
-
-        const emailExists = usuarios.some(user => user.email === formData.email);
-        if (emailExists) {
-            setError('Ya existe un usuario con este email');
+        if (formData.password.length < 6) {
+            setError('La contraseña debe tener al menos 6 caracteres');
             return;
         }
 
-        const nuevoUsuario = {
-            email: formData.email,
-            password: formData.password,
-            rol: 'paciente',
-            nombre: formData.nombre,
-            apellido: formData.apellido,
-            tipoDocumento: formData.tipoDoc,
-            documento: formData.documento,
-            genero: formData.genero,
-            fechaNacimiento: formData.fechaNacimiento,
-            telefono: formData.telefono
-        };
+        setLoading(true);
 
-        usuarios.push(nuevoUsuario);
-
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-        setSuccess('Usuario registrado exitosamente');
-        
-        setFormData({
-            nombre: '',
-            apellido: '',
-            tipoDoc: '',
-            documento: '',
-            genero: '',
-            fechaNacimiento: '',
-            telefono: '',
-            email: '',
-            password: ''
-        });
+        try {
+            const { confirmPassword, ...userData } = formData;
+            const result = await register(userData);
+            
+            if (result.success) {
+                navigate('/mi-salud');
+            } else {
+                setError(result.error);
+            }
+        } catch (error) {
+            setError('Error al registrar usuario');
+        } finally {
+            setLoading(false);
+        }
     };
+
     return (
         <main>
       <div className="container_registro">
         <div className="main_image">
-          <a href="/home">
+          <Link to="/home">
             <img
               src={Logo}
               alt="Hospital Polaco"
             />
-          </a>
+          </Link>
         </div>
         <div className="form_group">
           <h1 className="title">Registrarse</h1>
@@ -102,21 +86,16 @@ const Registro = () => {
                 {error}
               </div>
             )}
-            {success && (
-              <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-                {success}
-              </div>
-            )}
             
             <div className="form_group">
-              <label htmlFor="name">Nombre</label>
+              <label htmlFor="nombre">Nombre</label>
               <input
                 placeholder="Juan"
                 type="text"
-                id="name"
+                id="nombre"
                 name="nombre"
                 value={formData.nombre}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -129,81 +108,7 @@ const Registro = () => {
                 id="apellido"
                 name="apellido"
                 value={formData.apellido}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form_group">
-              <label htmlFor="tipo-doc">Tipo de documento</label>
-              <select 
-                name="tipoDoc" 
-                id="tipo-doc" 
-                value={formData.tipoDoc}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled>
-                  Selecciona una opción
-                </option>
-                <option value="dni">DNI</option>
-                <option value="pasaporte">Pasaporte</option>
-                <option value="cedula">Cédula de identidad</option>
-              </select>
-            </div>
-
-            <div className="form_group">
-              <label htmlFor="documento">Numero de documento</label>
-              <input
-                placeholder="12345678"
-                type="number"
-                id="documento"
-                name="documento"
-                value={formData.documento}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form_group">
-              <label htmlFor="genero">Genero</label>
-              <select 
-                name="genero" 
-                id="genero" 
-                value={formData.genero}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled>
-                  Selecciona una opción
-                </option>
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
-                <option value="no-binario">No binario</option>
-              </select>
-            </div>
-
-            <div className="form_group">
-              <label htmlFor="date">Fecha de nacimiento</label>
-              <input 
-                type="date" 
-                id="date" 
-                name="fechaNacimiento"
-                value={formData.fechaNacimiento}
-                onChange={handleInputChange}
-                required 
-              />
-            </div>
-
-            <div className="form_group">
-              <label htmlFor="tel">Celular</label>
-              <input
-                placeholder="011 2230 4880"
-                type="tel"
-                id="tel"
-                name="telefono"
-                value={formData.telefono}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -216,29 +121,129 @@ const Registro = () => {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 required
               />
             </div>
 
             <div className="form_group">
-              <label htmlFor="password">Contraseña</label>
+              <label htmlFor="dni">DNI</label>
               <input
-                placeholder="Ingresa tu contraseña"
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
+                placeholder="12345678"
+                type="text"
+                id="dni"
+                name="dni"
+                value={formData.dni}
+                onChange={handleChange}
                 required
               />
             </div>
 
-            <button type="submit" className="primary_button">Registrarse</button>
+            <div className="form_row">
+              <div className="form_group">
+                <label htmlFor="password">Contraseña</label>
+                <input
+                  placeholder="Ingresa tu contraseña"
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form_group">
+                <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+                <input
+                  placeholder="Confirma tu contraseña"
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form_group">
+              <label htmlFor="telefono">Teléfono</label>
+              <input
+                placeholder="011 2230 4880"
+                type="tel"
+                id="telefono"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form_group">
+              <label htmlFor="direccion">Dirección</label>
+              <input
+                placeholder="Calle 123, Ciudad"
+                type="text"
+                id="direccion"
+                name="direccion"
+                value={formData.direccion}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form_group">
+              <label htmlFor="fecha_nacimiento">Fecha de Nacimiento</label>
+              <input
+                type="date"
+                id="fecha_nacimiento"
+                name="fecha_nacimiento"
+                value={formData.fecha_nacimiento}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form_row">
+              <div className="form_group">
+                <label htmlFor="obra_social">Obra Social</label>
+                <input
+                  placeholder="Obra social"
+                  type="text"
+                  id="obra_social"
+                  name="obra_social"
+                  value={formData.obra_social}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form_group">
+                <label htmlFor="numero_afiliado">Número de Afiliado</label>
+                <input
+                  placeholder="Número de afiliado"
+                  type="text"
+                  id="numero_afiliado"
+                  name="numero_afiliado"
+                  value={formData.numero_afiliado}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <button 
+                type="submit" 
+                disabled={loading}
+                className="primary_button"
+            >
+                {loading ? 'Registrando...' : 'Registrarse'}
+            </button>
           </form>
+
+          <div className="registro-links">
+            <p>¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link></p>
+          </div>
         </div>
       </div>
     </main>
     );
 }
+
 export default Registro;

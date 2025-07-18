@@ -22,6 +22,9 @@ const Home = () => {
   const renderByRole = () => {
     if (!user) return null;
 
+    console.log('🏠 Home - User:', user);
+    console.log('🏠 Home - User role:', user.rol);
+
     switch (user.rol) {
       case "paciente":
         return (
@@ -30,15 +33,17 @@ const Home = () => {
             <p className="text-center home-desc text-lg text-gray-700 mb-6">Desde aca vas a poder ver y reservar citas médicas.</p>
           </div>
         );
-            case "administrador":
+      case "admin":
+      case "administrador":
         return (
           <div>
-            <h2 className="text-center home-title text-3xl font-bold text-black-700 mb-2">Bienvenido, administrador</h2>
+            <h2 className="text-center home-title text-3xl font-bold text-black-700 mb-2">Bienvenido, administrador {user.nombre}</h2>
             <p className="text-center home-desc text-lg text-gray-700 mb-6">Desde aca vas a poder gestionar usuarios, médicos y estadísticas.</p>
           </div>
         );
       default:
-        return <p className="text-center">Rol desconocido</p>;
+        console.log('❌ Home - Rol no reconocido:', user.rol);
+        return <p className="text-center">Rol desconocido: {user.rol}</p>;
     }
   };
 
