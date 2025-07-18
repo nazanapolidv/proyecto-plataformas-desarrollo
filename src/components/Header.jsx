@@ -2,11 +2,12 @@ import '../css/Header.css';
 import '../css/index.css';
 import Sesion from './Sesion';
 import Logo from '../assets/logo-removebg-preview.png';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const { user, hasRole } = useAuth();
 
-    const isAdmin = user?.rol === 'administrador';
+    const isAdmin = hasRole('administrador');
 
     return (
         <header>

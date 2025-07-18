@@ -1,42 +1,55 @@
 import { useEffect, useState } from "react";
-import citasData from "../data/citas.json";
-import SinAuth from "./SinAuth";
+import { citasService } from "../services/apiService";
+import { useAuth } from "../context/AuthContext";
 
 const MisCitas = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) {
-        return (
-            <SinAuth />
-        );
-    }
+    const { user } = useAuth();
     const [citas, setCitas] = useState([]);
     const [isAgendando, setIsAgendando] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [nuevaCita, setNuevaCita] = useState({
         fecha: '',
         especialidad: '',
-        medico: ''
+        medico: '',
+        hora: ''
     });
 
     useEffect(() => {
-        const savedCitas = localStorage.getItem('citas');
-        if (savedCitas) {
-            setCitas(JSON.parse(savedCitas));
-        } else {
-            setCitas(citasData);
-            localStorage.setItem('citas', JSON.stringify(citasData));
+        if (user) {
+            cargarCitas();
         }
-    }, []);
+    }, [user]);
 
-    const saveCitasToLocalStorage = (citasData) => {
-        localStorage.setItem('citas', JSON.stringify(citasData));
+    const cargarCitas = async () => {
+        try {
+            setLoading(true);
+            const data = await citasService.obtenerTodos();
+            // Filtrar citas del usuario actual
+            const citasUsuario = data.filter(cita => 
+                cita.paciente === `${user.nombre} ${user.apellido}` || 
+                cita.paciente === user.email
+            );
+            setCitas(citasUsuario);
+            setError('');
+        } catch (error) {
+            setError('Error al cargar las citas');
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleCancelarTurno = (index) => {
+    const handleCancelarTurno = async (citaId) => {
         if (window.confirm('¿Estás seguro de cancelar este turno?')) {
-            const citasActualizadas = citas.filter((_, idx) => idx !== index);
-            setCitas(citasActualizadas);
-            saveCitasToLocalStorage(citasActualizadas);
+            try {
+                await citasService.cancelar(citaId);
+                await cargarCitas(); // Recargar citas
+                setError('');
+            } catch (error) {
+                setError('Error al cancelar la cita');
+                console.error('Error:', error);
+            }
         }
     };
 
@@ -49,115 +62,144 @@ const MisCitas = () => {
         setNuevaCita(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSaveAgenda = () => {
-        if (nuevaCita.fecha && nuevaCita.especialidad && nuevaCita.medico) {
-            const fechaSeleccionada = new Date(nuevaCita.fecha);
-            const diaSemana = fechaSeleccionada.getDay();
-            const hora = fechaSeleccionada.getHours();
+    const handleSaveAgenda = async () => {
+        try {
+            if (nuevaCita.fecha && nuevaCita.especialidad && nuevaCita.medico && nuevaCita.hora) {
+                const fechaSeleccionada = new Date(nuevaCita.fecha);
+                const diaSemana = fechaSeleccionada.getDay();
+                const [hora, minutos] = nuevaCita.hora.split(':');
+                const horaNum = parseInt(hora);
 
-            if (diaSemana === 0 || diaSemana === 6) {
-                alert('Solo se pueden agendar turnos de lunes a viernes');
-                return;
+                if (diaSemana === 0 || diaSemana === 6) {
+                    alert('Solo se pueden agendar turnos de lunes a viernes');
+                    return;
+                }
+
+                if (horaNum < 9 || horaNum >= 18) {
+                    alert('Solo se pueden agendar turnos de 9:00 a 18:00 horas');
+                    return;
+                }
+
+                const citaData = {
+                    fecha: nuevaCita.fecha,
+                    hora: nuevaCita.hora,
+                    paciente: `${user.nombre} ${user.apellido}`,
+                    medico: nuevaCita.medico,
+                    especialidad: nuevaCita.especialidad,
+                    estado: 'Pendiente'
+                };
+
+                await citasService.crear(citaData);
+                await cargarCitas(); // Recargar citas
+                setNuevaCita({ fecha: '', especialidad: '', medico: '', hora: '' });
+                setIsAgendando(false);
+                setError('');
+            } else {
+                alert('Por favor completa todos los campos');
             }
-
-            if (hora < 9 || hora >= 18) {
-                alert('Solo se pueden agendar turnos de 9:00 a 18:00 horas');
-                return;
-            }
-
-            const citasActualizadas = [...citas, nuevaCita];
-            setCitas(citasActualizadas);
-            saveCitasToLocalStorage(citasActualizadas);
-            setIsAgendando(false);
-            setNuevaCita({ fecha: '', especialidad: '', medico: '' });
-        } else {
-            alert('Por favor completa todos los campos');
+        } catch (error) {
+            setError('Error al crear la cita');
+            console.error('Error:', error);
         }
     };
 
     const handleCancelAgenda = () => {
+        setNuevaCita({ fecha: '', especialidad: '', medico: '', hora: '' });
         setIsAgendando(false);
-        setNuevaCita({ fecha: '', especialidad: '', medico: '' });
     };
 
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-lg">Cargando citas...</div>
+            </div>
+        );
+    }
+
     return (
-        <main className="w-full p-6 min-h-screen">
-            <div className=" flex flex-col items-center justify-center" style={{ marginLeft: "100px", marginRight: "100px" }}>
-                <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Próximos Turnos</h2>
-                <div className="w-full grid gap-6">
-                    {citas.length === 0 ? (
-                        <p className="text-gray-500 text-center">No tenés turnos próximos.</p>
-                    ) : (
-                        citas.map((cita, idx) => (
-                            <div
-                                key={idx}
-                                className="bg-white shadow rounded-lg p-5 flex flex-col gap-2 border border-gray-100"
-                            >
-                                <h3 className="text-lg font-semibold text-[#DC143C]">{cita.fecha}</h3>
-                                <p className="text-gray-700">{cita.especialidad}</p>
-                                <p className="text-gray-500">{cita.medico}</p>
-                                <button 
-                                    onClick={() => handleCancelarTurno(idx)}
-                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium cursor-pointer w-[150px]"
-                                >
-                                    Cancelar turno
-                                </button>
-                            </div>
-                        ))
-                    )}
+        <main className="flex flex-col items-center h-[70vh] bg-gray-50">
+            <section className="w-4/5 max-w-4xl">
+                <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Mis Citas</h2>
+                
+                {error && (
+                    <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+                        {error}
+                    </div>
+                )}
+
+                <div className="mb-6 text-center">
+                    <button 
+                        onClick={handleAgendarTurno}
+                        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer"
+                    >
+                        Agendar Nuevo Turno
+                    </button>
                 </div>
 
                 {isAgendando && (
-                    <div className="w-full bg-white shadow-lg rounded-lg p-6 border border-gray-100 mt-6">
-                        <h3 className="text-xl font-bold text-[#DC143C] mb-4 text-center">Agendar Nuevo Turno</h3>
-                        <div className="grid gap-4">
+                    <div className="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg shadow-sm">
+                        <h3 className="text-xl font-semibold mb-4 text-blue-800">Agendar Nuevo Turno</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">Fecha y Hora</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Fecha:</label>
                                 <input
-                                    type="datetime-local"
+                                    type="date"
                                     name="fecha"
                                     value={nuevaCita.fecha}
                                     onChange={handleInputChange}
-                                    className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:border-[#DC143C] focus:outline-none"
-                                    min={new Date().toISOString().slice(0, 16)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
-                                <p className="text-sm text-gray-500 mt-1">
-                                    * Solo lunes a viernes de 9:00 a 18:00 hs
-                                </p>
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">Especialidad</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Hora:</label>
                                 <input
-                                    type="text"
+                                    type="time"
+                                    name="hora"
+                                    value={nuevaCita.hora}
+                                    onChange={handleInputChange}
+                                    min="09:00"
+                                    max="18:00"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Especialidad:</label>
+                                <select
                                     name="especialidad"
                                     value={nuevaCita.especialidad}
                                     onChange={handleInputChange}
-                                    className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:border-[#DC143C] focus:outline-none"
-                                    placeholder="Ej: Cardiología, Neurología"
-                                />
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Selecciona una especialidad</option>
+                                    <option value="Cardiología">Cardiología</option>
+                                    <option value="Dermatología">Dermatología</option>
+                                    <option value="Pediatría">Pediatría</option>
+                                    <option value="Ginecología">Ginecología</option>
+                                    <option value="Neurología">Neurología</option>
+                                </select>
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">Médico</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Médico:</label>
                                 <input
                                     type="text"
                                     name="medico"
                                     value={nuevaCita.medico}
                                     onChange={handleInputChange}
-                                    className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:border-[#DC143C] focus:outline-none"
-                                    placeholder="Ej: Dr. Juan Pérez"
+                                    placeholder="Nombre del médico"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
                         </div>
-                        <div className="flex gap-3 justify-center mt-6">
-                            <button
+                        <div className="mt-6 flex gap-2">
+                            <button 
                                 onClick={handleSaveAgenda}
-                                className="bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full hover:shadow-lg transition-shadow cursor-pointer w-[120px]"
+                                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
                             >
-                                Confirmar Turno
+                                Guardar Cita
                             </button>
-                            <button
+                            <button 
                                 onClick={handleCancelAgenda}
-                                className="bg-gray-500 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-full hover:shadow-lg transition-shadow cursor-pointer w-[120px]"
+                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 cursor-pointer"
                             >
                                 Cancelar
                             </button>
@@ -165,15 +207,44 @@ const MisCitas = () => {
                     </div>
                 )}
 
-                <div className="flex gap-4 mt-6">
-                    <button
-                        onClick={handleAgendarTurno}
-                        className="bg-green-800 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full hover:shadow-lg transition-shadow cursor-pointer w-[150px]"
-                    >
-                        Agendar turno
-                    </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {citas.length > 0 ? (
+                        citas.map((cita) => (
+                            <div key={cita.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                                <div className="mb-4">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">{cita.especialidad}</h3>
+                                    <p className="text-gray-600"><strong>Fecha:</strong> {cita.fecha}</p>
+                                    <p className="text-gray-600"><strong>Hora:</strong> {cita.hora}</p>
+                                    <p className="text-gray-600"><strong>Médico:</strong> {cita.medico}</p>
+                                    <p className="text-gray-600">
+                                        <strong>Estado:</strong> 
+                                        <span className={`ml-2 px-2 py-1 rounded text-sm ${
+                                            cita.estado === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                                            cita.estado === 'Completada' ? 'bg-green-100 text-green-800' :
+                                            'bg-red-100 text-red-800'
+                                        }`}>
+                                            {cita.estado}
+                                        </span>
+                                    </p>
+                                </div>
+                                {cita.estado === 'Pendiente' && (
+                                    <button 
+                                        onClick={() => handleCancelarTurno(cita.id)}
+                                        className="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
+                                    >
+                                        Cancelar Turno
+                                    </button>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-12">
+                            <p className="text-gray-500 text-lg">No tienes citas programadas</p>
+                            <p className="text-gray-400 mt-2">Haz clic en "Agendar Nuevo Turno" para programar una cita</p>
+                        </div>
+                    )}
                 </div>
-            </div>
+            </section>
         </main>
     );
 };

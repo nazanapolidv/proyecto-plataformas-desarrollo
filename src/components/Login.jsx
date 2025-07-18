@@ -1,42 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Usuarios from "../data/usuarios.json";
+import { useAuth } from "../context/AuthContext";
 import Logo from "../assets/logo.png";
 import "../css/Login.css";
 import "../css/index.css";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const { login, user, isAuthenticated } = useAuth();
+  const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
 
   const [error, setError] = useState("");
 
+  // Si el usuario ya está autenticado, redirigir al home
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Limpiar error previo
+    
+    try {
+      const loginSuccess = await login(formData.email, formData.password);
 
-    const savedUsers = localStorage.getItem('usuarios');
-    const usuarios = savedUsers ? JSON.parse(savedUsers) : Usuarios;
-
-    const usuarioEncontrado = usuarios.find(
-      u => u.email === user.email && u.password === user.password
-    );
-
-    if (usuarioEncontrado) {
-      localStorage.setItem("user", JSON.stringify(usuarioEncontrado));
-      onLogin(usuarioEncontrado);
-      navigate("/home");
-    } else {
+      if (loginSuccess) {
+        // Usar setTimeout para permitir que React actualice el estado
+        setTimeout(() => {
+          navigate("/home");
+        }, 100);
+      }
+    } catch (error) {
       setError("Usuario o contraseña incorrectos");
     }
   };
@@ -60,7 +67,7 @@ const Login = ({ onLogin }) => {
               type="text"
               name="email"
               placeholder="jperez0001"
-              value={user.email}
+              value={formData.email}
               onChange={handleChange}
               required
             />
@@ -71,7 +78,7 @@ const Login = ({ onLogin }) => {
               type="password"
               name="password"
               placeholder="********"
-              value={user.password}
+              value={formData.password}
               onChange={handleChange}
               required
             />

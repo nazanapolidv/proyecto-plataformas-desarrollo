@@ -1,27 +1,9 @@
 import { useEffect, useState } from "react";
 import historialData from "../data/historial.json";
-import SinAuth from "./SinAuth";
+import { useAuth } from "../context/AuthContext";
 
 const MiHistorial = () => {
-
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const stored = localStorage.getItem("user");
-        if (stored) {
-            setUser(JSON.parse(stored));
-        }
-    }, []);
-
-    if (!user) {
-        return null;
-    }
-
-    if (user.rol !== "paciente") {
-        return (
-            <SinAuth />
-        );
-    }
+    const { user } = useAuth();
 
     return (
         <main className="flex flex-col items-center h-[70vh] bg-gray-50">
