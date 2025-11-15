@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { especializacionesService } from '../services/apiService';
+import { apiService } from '../services/apiService.js';
 
 const listEspecialidades = () => {
   const [editingId, setEditingId] = useState(null);
@@ -17,7 +17,7 @@ const listEspecialidades = () => {
   const cargarEspecialidades = async () => {
     try {
       setLoading(true);
-      const data = await especializacionesService.obtenerTodos();
+      const data = await apiService.obtenerTodos();
       setEspecialidadesList(data);
       setError('');
     } catch (error) {
@@ -36,7 +36,7 @@ const listEspecialidades = () => {
   const handleSave = async (id) => {
     try {
       if (editForm.nombre && editForm.descripcion) {
-        await especializacionesService.actualizar(id, editForm);
+        await apiService.actualizar(id, editForm);
         await cargarEspecialidades();
         setEditingId(null);
         setEditForm({ nombre: '', descripcion: '' });
@@ -62,9 +62,9 @@ const listEspecialidades = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta especialización?')) {
+    if (window.confirm('¿Estás seguro de eliminar esta especialización?')) {
       try {
-        await especializacionesService.eliminar(id);
+        await apiService.eliminar(id);
         await cargarEspecialidades();
         setError('');
       } catch (error) {
@@ -83,7 +83,7 @@ const listEspecialidades = () => {
   const handleSaveAdd = async () => {
     try {
       if (addForm.nombre && addForm.descripcion) {
-        await especializacionesService.crear(addForm);
+        await apiService.crear(addForm);
         await cargarEspecialidades();
         setAddForm({ nombre: '', descripcion: '' });
         setIsAdding(false);

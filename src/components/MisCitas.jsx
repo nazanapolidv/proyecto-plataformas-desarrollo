@@ -82,8 +82,9 @@ const MisCitas = () => {
 
         try {
             const citaData = {
-                medico_id: selectedMedico,
-                especializacion_id: selectedEspecializacion,
+                paciente_id: user.id,
+                medico_id: parseInt(selectedMedico, 10),
+                especializacion_id: parseInt(selectedEspecializacion, 10),
                 fecha,
                 hora,
                 motivo
@@ -91,7 +92,7 @@ const MisCitas = () => {
 
             await apiService.createCita(citaData);
             setSuccess('Cita creada exitosamente');
-            
+
             setSelectedEspecializacion('');
             setSelectedMedico('');
             setFecha('');
@@ -99,7 +100,7 @@ const MisCitas = () => {
             setMotivo('');
             setMedicosDisponibles([]);
             setShowForm(false);
-            
+
             await loadCitas();
         } catch (error) {
             console.error('Error al crear cita:', error);
@@ -110,7 +111,7 @@ const MisCitas = () => {
     };
 
     const handleCancelCita = async (citaId) => {
-        if (window.confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
+        if (window.confirm('¿Estás seguro de cancelar esta cita?')) {
             try {
                 await apiService.cancelCita(citaId);
                 setSuccess('Cita cancelada exitosamente');
@@ -125,7 +126,7 @@ const MisCitas = () => {
     const handleMedicoChange = (e) => {
         const medicoId = e.target.value;
         setSelectedMedico(medicoId);
-        
+
         setFecha('');
         setHora('');
     };
@@ -137,64 +138,64 @@ const MisCitas = () => {
     const getValidDates = () => {
         const medicoData = getSelectedMedicoData();
         if (!medicoData) return [];
-        
+
         const diasAtencion = JSON.parse(medicoData.dias_atencion);
         const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const validDayIndices = diasAtencion.map(day => dayNames.indexOf(day));
-        
+
         const validDates = [];
         const today = new Date();
         const maxDate = new Date();
         maxDate.setDate(maxDate.getDate() + 30);
-        
+
         for (let date = new Date(today); date <= maxDate; date.setDate(date.getDate() + 1)) {
             if (validDayIndices.includes(date.getDay())) {
                 validDates.push(date.toISOString().split('T')[0]);
             }
         }
-        
+
         return validDates;
     };
 
     const isDayValid = (date) => {
         const medicoData = getSelectedMedicoData();
         if (!medicoData) return false;
-        
+
         const diasAtencion = JSON.parse(medicoData.dias_atencion);
         const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const selectedDay = dayNames[new Date(date + 'T00:00:00').getDay()];
-        
+
         return diasAtencion.includes(selectedDay);
     };
 
     const isTimeValid = (time) => {
         const medicoData = getSelectedMedicoData();
         if (!medicoData) return false;
-        
-        const horarioInicio = medicoData.horario_inicio.substring(0, 5); 
-        const horarioFin = medicoData.horario_fin.substring(0, 5);  
-        
+
+        const horarioInicio = medicoData.horario_inicio.substring(0, 5);
+        const horarioFin = medicoData.horario_fin.substring(0, 5);
+
         return time >= horarioInicio && time <= horarioFin;
     };
 
     const getAvailableTimeSlots = () => {
         const medicoData = getSelectedMedicoData();
         if (!medicoData) return [];
-        
+
         const horarioInicio = medicoData.horario_inicio.substring(0, 5);
         const horarioFin = medicoData.horario_fin.substring(0, 5);
-        
+
         const slots = [];
         const start = new Date(`2000-01-01T${horarioInicio}:00`);
         const end = new Date(`2000-01-01T${horarioFin}:00`);
-        
+
         for (let time = start; time <= end; time.setMinutes(time.getMinutes() + 30)) {
             const timeString = time.toTimeString().substring(0, 5);
-            if (timeString !== horarioFin) { 
+            if (timeString !== horarioFin) {
                 slots.push(timeString);
             }
         }
-        
+
         return slots;
     };
 
@@ -262,7 +263,7 @@ const MisCitas = () => {
                 {showForm && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
                         <h3 className="text-xl font-semibold text-gray-800 mb-6">Agendar Nueva Cita</h3>
-                        
+
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -311,7 +312,6 @@ const MisCitas = () => {
                                     )}
                                 </div>
 
-                                {/* Fecha */}
                                 <div>
                                     <label htmlFor="fecha" className="block text-sm font-medium text-gray-700 mb-2">
                                         Fecha
@@ -321,7 +321,7 @@ const MisCitas = () => {
                                         value={fecha}
                                         onChange={(e) => {
                                             setFecha(e.target.value);
-                                            setHora(''); 
+                                            setHora('');
                                         }}
                                         required
                                         disabled={!selectedMedico}
@@ -332,12 +332,12 @@ const MisCitas = () => {
                                             const dateObj = new Date(date + 'T00:00:00');
                                             const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
                                             const dayName = dayNames[dateObj.getDay()];
-                                            
+
                                             const day = dateObj.getDate();
                                             const month = dateObj.toLocaleDateString('es-ES', { month: 'long' });
                                             const year = dateObj.getFullYear();
                                             const formattedDate = `${dayName}, ${day} de ${month} de ${year}`;
-                                            
+
                                             return (
                                                 <option key={date} value={date}>
                                                     {formattedDate}
@@ -352,7 +352,6 @@ const MisCitas = () => {
                                     )}
                                 </div>
 
-                                {/* Hora */}
                                 <div>
                                     <label htmlFor="hora" className="block text-sm font-medium text-gray-700 mb-2">
                                         Hora
@@ -380,7 +379,6 @@ const MisCitas = () => {
                                 </div>
                             </div>
 
-                            {/* Motivo */}
                             <div>
                                 <label htmlFor="motivo" className="block text-sm font-medium text-gray-700 mb-2">
                                     Motivo de la consulta
@@ -396,7 +394,6 @@ const MisCitas = () => {
                                 />
                             </div>
 
-                            {/* Botones */}
                             <div className="flex justify-end space-x-4">
                                 <button
                                     type="button"
@@ -417,7 +414,6 @@ const MisCitas = () => {
                     </div>
                 )}
 
-                {/* Lista de citas existentes */}
                 {citas.length === 0 ? (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
                         <p className="text-gray-500 text-lg">No tienes citas programadas.</p>
