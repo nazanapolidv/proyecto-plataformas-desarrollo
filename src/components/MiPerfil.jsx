@@ -286,14 +286,14 @@ const MiPerfil = () => {
                             <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
                                 <button 
                                     type="button"
-                                    className="px-6 py-2 font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="bg-red-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-red-700 cursor-pointer"
                                     onClick={() => setEditing(false)}
                                 >
                                     Cancelar
                                 </button>
                                 <button 
                                     type="submit" 
-                                    className="px-6 py-2 font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="bg-green-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-green-700 cursor-pointer"
                                     disabled={saving}
                                 >
                                     {saving ? 'Guardando...' : 'Guardar Cambios'}
@@ -305,7 +305,7 @@ const MiPerfil = () => {
                     {!editing && (
                         <div className="px-8 pb-8">
                             <button 
-                                className="w-full px-6 py-3 font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+                                className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
                                 onClick={() => setEditing(true)}
                             >
                                 Editar Perfil

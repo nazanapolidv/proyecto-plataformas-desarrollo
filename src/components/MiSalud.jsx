@@ -7,7 +7,6 @@ import calendarImg from '../assets/calendar.png';
 import historialImg from '../assets/historial.png';
 import profileImg from '../assets/profile.png';
 import '../css/index.css';
-import '../css/MiSalud.css';
 
 const MiSalud = () => {
     const { user } = useAuth();
@@ -70,7 +69,7 @@ const MiSalud = () => {
 
             await apiService.createCita(citaData);
             setSuccess('Cita creada exitosamente');
-            
+
             setSelectedEspecializacion('');
             setSelectedMedico('');
             setFecha('');
@@ -91,47 +90,47 @@ const MiSalud = () => {
     };
 
     return (
-        <main className='flex flex-col items-center justify-center h-[70vh] m-auto'>
+        <main className='flex flex-col items-center justify-center min-h-[70vh] w-full bg-slate-50 py-10'>
             {user?.rol === "paciente" ? (
                 <>
-                    <div>
-                        <h2 className="title">Mi Salud</h2>
-                        <h3 className="subtitle">¡Hola, <b>{user ? user.nombre : ''}</b>!</h3>
+                    <div className="text-center mb-10">
+                        <h2 className="title text-3xl font-bold text-slate-900">Mi Salud</h2>
+                        <h3 className="subtitle text-lg text-slate-600 mt-2">¡Hola, <b>{user ? user.nombre : ''}</b>!</h3>
                     </div>
-                    <div className="container_mi_salud">
-                        <div className="card_container ">
-                            <div className="card">
-                                <Link className="redireccion" to="/mis-citas">
-                                    <div className="card_image_container">
-                                        <img src={calendarImg} alt="Citas" />
+                    <div className="w-full max-w-5xl px-4">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-100 transition-transform duration-200 hover:-translate-y-1">
+                                <Link className="flex flex-col items-center gap-4 p-6 text-center group" to="/mis-citas">
+                                    <div className="w-24 h-24 rounded-full bg-red-50 flex items-center justify-center shadow-inner group-hover:bg-red-100 transition-colors">
+                                        <img className="w-14 h-14 object-contain" src={calendarImg} alt="Citas" />
                                     </div>
-                                    <div className="card-content">
-                                        <h3>Mis citas</h3>
-                                        <p>Desde acá podes gestionar tus citas médicas</p>
+                                    <div className="">
+                                        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-red-600 transition-colors">Mis citas</h3>
+                                        <p className="mt-2 text-sm text-slate-600">Desde acá podes gestionar tus citas médicas</p>
                                     </div>
                                 </Link>
                             </div>
-                            <div className="card">
-                                <Link className="redireccion" to="/mi-historial">
-                                    <div className="card_image_container">
-                                        <img src={historialImg} alt="Historial" />
+                            <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-100 transition-transform duration-200 hover:-translate-y-1">
+                                <Link className="redireccion flex flex-col items-center gap-4 p-6 text-center group" to="/mi-historial">
+                                    <div className="w-24 h-24 rounded-full bg-red-50 flex items-center justify-center shadow-inner group-hover:bg-red-100 transition-colors">
+                                        <img className="w-14 h-14 object-contain" src={historialImg} alt="Historial" />
                                     </div>
-                                    <div className="card-content">
-                                        <h3>Mi historial</h3>
-                                        <p>
+                                    <div className="">
+                                        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-red-600 transition-colors">Mi historial</h3>
+                                        <p className="mt-2 text-sm text-slate-600">
                                             Consultá tu historial de atención en nuestros centros médicos
                                         </p>
                                     </div>
                                 </Link>
                             </div>
-                            <div className="card">
-                                <Link className="redireccion" to="/mi-perfil">
-                                    <div className="card_image_container">
-                                        <img src={profileImg} alt="Perfil" />
+                            <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl border border-slate-100 transition-transform duration-200 hover:-translate-y-1">
+                                <Link className="redireccion flex flex-col items-center gap-4 p-6 text-center group" to="/mi-perfil">
+                                    <div className="w-24 h-24 rounded-full bg-red-50 flex items-center justify-center shadow-inner group-hover:bg-red-100 transition-colors">
+                                        <img className="w-14 h-14 object-contain" src={profileImg} alt="Perfil" />
                                     </div>
-                                    <div className="card-content">
-                                        <h3>Mi perfil</h3>
-                                        <p>Actualizá tu perfil</p>
+                                    <div className="">
+                                        <h3 className="text-xl font-semibold text-slate-900 group-hover:text-red-600 transition-colors">Mi perfil</h3>
+                                        <p className="mt-2 text-sm text-slate-600">Actualizá tu perfil</p>
                                     </div>
                                 </Link>
                             </div>

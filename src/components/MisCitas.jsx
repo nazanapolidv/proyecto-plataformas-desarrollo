@@ -57,8 +57,8 @@ const MisCitas = () => {
                 const medicos = await apiService.getMedicosByEspecializacion(especializacionId);
                 setMedicosDisponibles(medicos);
             } catch (error) {
-                console.error('Error al cargar médicos:', error);
-                setError('Error al cargar los médicos');
+                console.error('Error al cargar medicos:', error);
+                setError('Error al cargar los medicos');
             }
         }
     };
@@ -234,18 +234,20 @@ const MisCitas = () => {
     }
 
     return (
-        <main className="flex flex-col items-center min-h-[70vh] bg-gray-50 py-8">
-            <section className="w-4/5 max-w-6xl">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-semibold text-gray-800">
+        <main className="flex flex-col items-center min-h-[70vh] w-full bg-gradient-to-br from-slate-100 via-white to-slate-50 py-10">
+            <section className="w-11/12 max-w-6xl">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+                    <h2 className="text-3xl font-semibold text-slate-900">
                         Mis Citas Médicas
                     </h2>
+                    {showForm ? null : (
                     <button
                         onClick={() => setShowForm(!showForm)}
-                        className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+                        className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
                     >
-                        {showForm ? 'Cancelar' : 'Nueva Cita'}
+                        Nueva cita
                     </button>
+                    )}
                 </div>
 
                 {error && (
@@ -261,13 +263,13 @@ const MisCitas = () => {
                 )}
 
                 {showForm && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-6">Agendar Nueva Cita</h3>
+                    <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 p-8 mb-10">
+                        <h3 className="text-2xl font-semibold text-slate-900 mb-8">Agendar Nueva Cita</h3>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label htmlFor="especializacion" className="block text-sm font-medium text-gray-700 mb-2">
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="especializacion" className="text-sm font-semibold text-slate-600">
                                         Especialización
                                     </label>
                                     <select
@@ -275,9 +277,9 @@ const MisCitas = () => {
                                         value={selectedEspecializacion}
                                         onChange={handleEspecializacionChange}
                                         required
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition"
                                     >
-                                        <option value="">Selecciona una especialización</option>
+                                        <option value="">Seleccioná una especializacion</option>
                                         {especializaciones.map((esp) => (
                                             <option key={esp.id} value={esp.id}>
                                                 {esp.nombre}
@@ -285,8 +287,8 @@ const MisCitas = () => {
                                         ))}
                                     </select>
                                 </div>
-                                <div>
-                                    <label htmlFor="medico" className="block text-sm font-medium text-gray-700 mb-2">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="medico" className="text-sm font-semibold text-slate-600">
                                         Médico
                                     </label>
                                     <select
@@ -295,9 +297,9 @@ const MisCitas = () => {
                                         onChange={handleMedicoChange}
                                         required
                                         disabled={!selectedEspecializacion}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                                        className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 transition"
                                     >
-                                        <option value="">Selecciona un médico</option>
+                                        <option value="">Seleccioná un medico</option>
                                         {medicosDisponibles.map((medico) => (
                                             <option key={medico.id} value={medico.id}>
                                                 {medico.nombre} {medico.apellido}
@@ -305,15 +307,15 @@ const MisCitas = () => {
                                         ))}
                                     </select>
                                     {selectedMedico && (
-                                        <div className="mt-2 text-sm text-gray-600">
+                                        <div className="mt-2 text-xs font-medium text-slate-500 bg-slate-100/60 rounded-xl px-3 py-2 inline-flex flex-col gap-1">
                                             <p><strong>Horario:</strong> {getSelectedMedicoData()?.horario_inicio?.substring(0, 5)} - {getSelectedMedicoData()?.horario_fin?.substring(0, 5)}</p>
                                             <p><strong>Días:</strong> {JSON.parse(getSelectedMedicoData()?.dias_atencion || '[]').join(', ')}</p>
                                         </div>
                                     )}
                                 </div>
 
-                                <div>
-                                    <label htmlFor="fecha" className="block text-sm font-medium text-gray-700 mb-2">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="fecha" className="text-sm font-semibold text-slate-600">
                                         Fecha
                                     </label>
                                     <select
@@ -325,9 +327,9 @@ const MisCitas = () => {
                                         }}
                                         required
                                         disabled={!selectedMedico}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                                        className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 transition"
                                     >
-                                        <option value="">Selecciona una fecha</option>
+                                        <option value="">Seleccioná una fecha</option>
                                         {getValidDates().map((date) => {
                                             const dateObj = new Date(date + 'T00:00:00');
                                             const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -345,15 +347,10 @@ const MisCitas = () => {
                                             );
                                         })}
                                     </select>
-                                    {selectedMedico && (
-                                        <p className="mt-1 text-xs text-gray-500">
-                                            Solo se muestran fechas en las que el médico atiende
-                                        </p>
-                                    )}
                                 </div>
 
-                                <div>
-                                    <label htmlFor="hora" className="block text-sm font-medium text-gray-700 mb-2">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="hora" className="text-sm font-semibold text-slate-600">
                                         Hora
                                     </label>
                                     <select
@@ -362,25 +359,20 @@ const MisCitas = () => {
                                         onChange={(e) => setHora(e.target.value)}
                                         required
                                         disabled={!selectedMedico || !fecha}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                                        className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-400 transition"
                                     >
-                                        <option value="">Selecciona una hora</option>
+                                        <option value="" className="p-3" >Seleccioná una hora</option>
                                         {getAvailableTimeSlots().map((timeSlot) => (
                                             <option key={timeSlot} value={timeSlot}>
                                                 {timeSlot}
                                             </option>
                                         ))}
                                     </select>
-                                    {selectedMedico && (
-                                        <p className="mt-1 text-xs text-gray-500">
-                                            Horarios disponibles cada 30 minutos
-                                        </p>
-                                    )}
                                 </div>
                             </div>
 
-                            <div>
-                                <label htmlFor="motivo" className="block text-sm font-medium text-gray-700 mb-2">
+                            <div className="flex flex-col gap-2">
+                                <label htmlFor="motivo" className="text-sm font-semibold text-slate-600">
                                     Motivo de la consulta
                                 </label>
                                 <textarea
@@ -389,25 +381,25 @@ const MisCitas = () => {
                                     onChange={(e) => setMotivo(e.target.value)}
                                     rows="3"
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-inner focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition"
                                     placeholder="Describe brevemente el motivo de tu consulta..."
                                 />
                             </div>
 
-                            <div className="flex justify-end space-x-4">
+                            <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
                                 <button
                                     type="button"
                                     onClick={() => setShowForm(false)}
-                                    className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-sm font-semibold text-white shadow-md shadow-rose-200/60 cursor-pointer"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={formLoading}
-                                    className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-sm font-semibold text-white shadow-md shadow-emerald-200/70 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                                 >
-                                    {formLoading ? 'Guardando...' : 'Agendar Cita'}
+                                    {formLoading ? 'Guardando...' : 'Agendar cita'}
                                 </button>
                             </div>
                         </form>
@@ -415,14 +407,14 @@ const MisCitas = () => {
                 )}
 
                 {citas.length === 0 ? (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-                        <p className="text-gray-500 text-lg">No tienes citas programadas.</p>
-                        <p className="text-gray-400 mt-2">¡Agenda tu primera cita médica!</p>
+                    <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 p-10 text-center">
+                        <p className="text-slate-600 text-lg font-medium">No tienes citas programadas.</p>
+                        <p className="text-slate-400 mt-2">¡Agenda tu primera cita médica!</p>
                     </div>
                 ) : (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-800">Citas Programadas</h3>
+                    <div className="bg-white/95 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 overflow-hidden">
+                        <div className="px-6 py-5 bg-slate-50 border-b border-slate-200">
+                            <h3 className="text-lg font-semibold text-slate-800">Citas Programadas</h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -464,7 +456,7 @@ const MisCitas = () => {
                                                 {cita.estado === 'pendiente' && (
                                                     <button
                                                         onClick={() => handleCancelCita(cita.id)}
-                                                        className="text-red-600 hover:text-red-900 font-medium transition-colors"
+                                                        className="bg-red-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-red-700 cursor-pointer"
                                                     >
                                                         Cancelar
                                                     </button>
