@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import ImagenPerfil from '../assets/profile.png';
 import Exit from '../assets/exit.png';
 import '../css/index.css';
-import '../css/Sesion.css';
 
 const Sesion = () => {
     const { user, logout } = useAuth();
@@ -15,14 +14,18 @@ const Sesion = () => {
     };
 
     return (
-        <div className="session">
+        <div className="">
             {user ? (
-                <div className="sesion_container">
-                    <button className='btn_sesion' onClick={handleLogout}>Cerrar Sesión</button>
-                    <img src={Exit} alt="Cerrar sesion" />
+                <div className="">
+                    <button className='flex items-center gap-2 cursor-pointer border border-slate-300 rounded-full px-4 py-2 text-sm text-slate-600 hover:text-slate-800 transition-colors' onClick={handleLogout}>
+                        Cerrar sesión
+                        <img src={Exit} className='w-6' alt="Cerrar sesión" />
+                    </button>
                 </div>
             ) : (
-                <Link to="/login"><img src={ImagenPerfil} alt="iniciar sesion o registrarse" /></Link>
+                <Link to="/login">
+                    <img src={ImagenPerfil} className='w-10' alt="iniciar sesión o registrarse" />
+                </Link>
             )}    
         </div>
     )

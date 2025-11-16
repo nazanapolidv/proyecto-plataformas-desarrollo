@@ -3,7 +3,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-// Importar rutas
 const usuariosRoutes = require('./routes/usuarios');
 const especializacionesRoutes = require('./routes/especializaciones');
 const citasRoutes = require('./routes/citas');
