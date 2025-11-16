@@ -4,6 +4,7 @@ import { apiService } from '../services/apiService';
 import { Link } from 'react-router-dom';
 import SinAuth from './SinAuth';
 import calendarImg from '../assets/calendar.png';
+import historialImg from '../assets/historial.png';
 import profileImg from '../assets/profile.png';
 import '../css/index.css';
 import '../css/MiSalud.css';
@@ -98,7 +99,7 @@ const MiSalud = () => {
                         <h3 className="subtitle">¡Hola, <b>{user ? user.nombre : ''}</b>!</h3>
                     </div>
                     <div className="container_mi_salud">
-                        <div className="card_container">
+                        <div className="card_container ">
                             <div className="card">
                                 <Link className="redireccion" to="/mis-citas">
                                     <div className="card_image_container">
@@ -113,7 +114,7 @@ const MiSalud = () => {
                             <div className="card">
                                 <Link className="redireccion" to="/mi-historial">
                                     <div className="card_image_container">
-                                        <img src={calendarImg} alt="Historial" />
+                                        <img src={historialImg} alt="Historial" />
                                     </div>
                                     <div className="card-content">
                                         <h3>Mi historial</h3>

@@ -10,9 +10,6 @@ const Home = () => {
   const renderByRole = () => {
     if (!isAuthenticated()) return null;
 
-    console.log('🏠 Home - User:', user);
-    console.log('🏠 Home - User role:', user.rol);
-
     switch (user.rol) {
       case "paciente":
         return (

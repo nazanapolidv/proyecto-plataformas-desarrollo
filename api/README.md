@@ -15,8 +15,6 @@ npm run dev
 npm start
 ```
 
-La API estará disponible en `http://localhost:3001`
-
 ## 📚 Endpoints Disponibles
 
 ### **Usuarios** (`/api/usuarios`)

@@ -30,7 +30,7 @@
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
-  width: 700px;
+  width: 550px;
 }
 
 .cardEspecializaciones:hover {

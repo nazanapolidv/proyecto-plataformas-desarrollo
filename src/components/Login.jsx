@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Usuarios from "../data/usuarios.json";
 import Logo from "../assets/logo.png";
 import "../css/Login.css";
 import "../css/index.css";
@@ -24,21 +23,15 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const savedUsers = localStorage.getItem('usuarios');
-    const usuarios = savedUsers ? JSON.parse(savedUsers) : Usuarios;
-
-    const usuarioEncontrado = usuarios.find(
-      u => u.email === user.email && u.password === user.password
-    );
-
-    if (usuarioEncontrado) {
-      login(usuarioEncontrado);
+    setError("");
+    const result = await login(user.email, user.password);
+    console.log(result)
+    if (result.success) {
       navigate("/home");
     } else {
-      setError("Usuario o contraseña incorrectos");
+      setError(result.error || "Usuario o contraseña incorrectos");
     }
   };
 
@@ -76,11 +69,18 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-            <button className="primary_button" type="submit">Iniciar sesión</button>
+            <button
+              type="submit"
+              className="bg-red-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-red-700 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            >
+              Iniciar sesión
+            </button>
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             <p>- o -</p>
-            <a href="/registro" className="secondary_button">Registrarse</a>
+            <a href="/registro"
+              className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
+            >Registrarse</a>
           </form>
         </div>
       </div>

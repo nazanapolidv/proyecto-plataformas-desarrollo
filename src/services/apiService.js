@@ -57,6 +57,21 @@ export const apiService = {
         return response.data;
     },
 
+    crear: async (data) => {
+        const response = await api.post('/especializaciones', data);
+        return response.data;
+    },
+
+    actualizar: async (id, data) => {
+        const response = await api.put(`/especializaciones/${id}`, data);
+        return response.data;
+    },
+
+    eliminar: async (id) => {
+        const response = await api.delete(`/especializaciones/${id}`);
+        return response.data;
+    },
+
     getMedicosByEspecializacion: async (especializacionId) => {
         const response = await api.get(`/especializaciones/${especializacionId}/medicos`);
         return response.data;

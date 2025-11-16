@@ -53,7 +53,6 @@ router.post('/login', (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    // No devolver la contraseña en la respuesta
     const { password: _, ...usuarioSinPassword } = usuario;
     res.json(usuarioSinPassword);
   } catch (error) {

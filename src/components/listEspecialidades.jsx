@@ -17,8 +17,8 @@ const listEspecialidades = () => {
   const cargarEspecialidades = async () => {
     try {
       setLoading(true);
-      const data = await apiService.obtenerTodos();
-      setEspecialidadesList(data);
+      const especialidadesArray = await apiService.getEspecializaciones();
+      setEspecialidadesList(especialidadesArray);
       setError('');
     } catch (error) {
       setError('Error al cargar las especializaciones');
@@ -117,7 +117,7 @@ const listEspecialidades = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 w-full">
+    <div className="flex flex-col items-center justify-center p-8 w-full">
       <div className="w-4/5 max-w-7xl mx-auto">
         <h2 className="text-4xl font-extrabold mb-10 text-center text-[#DC143C] drop-shadow">
           Especialidades Médicas
@@ -130,9 +130,9 @@ const listEspecialidades = () => {
         )}
 
         <div className="mb-6 text-center">
-          <button 
+          <button
             onClick={handleAdd}
-            className="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-900 transition cursor-pointer"
+            className="bg-green-600 text-white font-semibold px-8 py-3 p-3 rounded-full shadow-lg hover:bg-green-700 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
           >
             Agregar Especialidad
           </button>
@@ -166,13 +166,13 @@ const listEspecialidades = () => {
               </div>
             </div>
             <div className="mt-4 flex gap-2">
-              <button 
+              <button
                 onClick={handleSaveAdd}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
               >
                 Guardar
               </button>
-              <button 
+              <button
                 onClick={handleCancelAdd}
                 className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 cursor-pointer"
               >
@@ -184,7 +184,7 @@ const listEspecialidades = () => {
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {especialidadesList.map((especialidad) => (
-            <div key={especialidad.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <div key={especialidad.id} className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-evenly">
               {editingId === especialidad.id ? (
                 <>
                   <div className="mb-4">
@@ -208,13 +208,13 @@ const listEspecialidades = () => {
                     />
                   </div>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       onClick={() => handleSave(especialidad.id)}
                       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
                     >
                       Guardar
                     </button>
-                    <button 
+                    <button
                       onClick={handleCancel}
                       className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 cursor-pointer"
                     >
@@ -227,15 +227,15 @@ const listEspecialidades = () => {
                   <h3 className="text-xl font-semibold mb-2 text-gray-800">{especialidad.nombre}</h3>
                   <p className="text-gray-600 mb-4">{especialidad.descripcion}</p>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       onClick={() => handleEdit(especialidad)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
+                      className="bg-blue-600 text-white font-semibold px-8 py-3 p-3 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
                     >
                       Editar
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(especialidad.id)}
-                      className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
+                      className="bg-red-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-red-700 hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
                     >
                       Eliminar
                     </button>
