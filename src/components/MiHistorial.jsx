@@ -50,7 +50,7 @@ const MiHistorial = () => {
         <main className="flex flex-col items-center min-h-[70vh] w-full bg-gradient-to-br from-slate-100 via-white to-slate-50 py-10">
             <section className="w-full max-w-4xl px-4 sm:px-6">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-semibold text-slate-900">Mi Historial Medico</h2>
+                    <h2 className="text-3xl font-semibold text-slate-900">Mi Historial</h2>
                     <p className="mt-3 text-base text-slate-600">
                         Aca podes consultar tu historial de atencion medica. Si necesitas mas informacion, contactanos.
                     </p>

@@ -235,36 +235,39 @@ const MisCitas = () => {
 
     return (
         <main className="flex flex-col items-center min-h-[70vh] w-full bg-gradient-to-br from-slate-100 via-white to-slate-50 py-10">
-            <section className="w-11/12 max-w-6xl">
+            <section className="w-full max-w-6xl px-4 sm:px-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
-                    <h2 className="text-3xl font-semibold text-slate-900">
-                        Mis Citas Médicas
-                    </h2>
-                    {showForm ? null : (
-                    <button
-                        onClick={() => setShowForm(!showForm)}
-                        className="bg-blue-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
-                    >
-                        Nueva cita
-                    </button>
+                    <div>
+                        <p className="text-sm uppercase tracking-[0.4em] text-slate-300">Gestión</p>
+                        <h2 className="mt-1 text-3xl font-semibold text-slate-900">
+                            Mis Citas
+                        </h2>
+                    </div>
+                    {!showForm && (
+                        <button
+                            onClick={() => setShowForm(!showForm)}
+                            className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200/60 transition hover:-translate-y-0.5 hover:bg-emerald-600 cursor-pointer"
+                        >
+                            Nueva cita
+                        </button>
                     )}
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <p className="text-red-600 font-medium">{error}</p>
+                    <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                        {error}
                     </div>
                 )}
 
                 {success && (
-                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-green-600 font-medium">{success}</p>
+                    <div className="mb-6 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-600">
+                        {success}
                     </div>
                 )}
 
                 {showForm && (
-                    <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 p-8 mb-10">
-                        <h3 className="text-2xl font-semibold text-slate-900 mb-8">Agendar Nueva Cita</h3>
+                    <div className="mb-10 rounded-3xl border border-slate-100 bg-white/90 px-6 py-8 shadow-xl shadow-slate-300/30 backdrop-blur sm:px-10">
+                        <h3 className="mb-8 text-2xl font-semibold text-slate-900 cursor-pointer">Agendar Nueva Cita</h3>
 
                         <form onSubmit={handleSubmit} className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
@@ -390,14 +393,14 @@ const MisCitas = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowForm(false)}
-                                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-sm font-semibold text-white shadow-md shadow-rose-200/60 cursor-pointer"
+                                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-sm font-semibold text-white shadow-md shadow-rose-200/60 transition hover:-translate-y-0.5 cursor-pointer"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={formLoading}
-                                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-sm font-semibold text-white shadow-md shadow-emerald-200/70 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-sm font-semibold text-white shadow-md shadow-emerald-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                                 >
                                     {formLoading ? 'Guardando...' : 'Agendar cita'}
                                 </button>
@@ -407,16 +410,44 @@ const MisCitas = () => {
                 )}
 
                 {citas.length === 0 ? (
-                    <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 p-10 text-center">
-                        <p className="text-slate-600 text-lg font-medium">No tienes citas programadas.</p>
-                        <p className="text-slate-400 mt-2">¡Agenda tu primera cita médica!</p>
+                    <div className="rounded-3xl border border-slate-100 bg-white/90 p-10 text-center shadow-xl shadow-slate-300/30 backdrop-blur">
+                        <p className="text-lg font-medium text-slate-600">No tenés citas programadas.</p>
+                        <p className="mt-2 text-slate-400">¡Agendá tu primera cita médica!</p>
                     </div>
                 ) : (
-                    <div className="bg-white/95 backdrop-blur rounded-3xl shadow-xl shadow-slate-300/30 border border-slate-100 overflow-hidden">
-                        <div className="px-6 py-5 bg-slate-50 border-b border-slate-200">
-                            <h3 className="text-lg font-semibold text-slate-800">Citas Programadas</h3>
+                    <div className="rounded-3xl border border-slate-100 bg-white/95 shadow-xl shadow-slate-300/30 backdrop-blur">
+                        <div className="border-b border-slate-200 bg-slate-50 px-6 py-5">
+                            <h3 className="text-lg font-semibold text-slate-800">Citas programadas</h3>
                         </div>
-                        <div className="overflow-x-auto">
+                        <div className="md:hidden px-6 py-6 space-y-5">
+                            {citas.map((cita) => (
+                                <article key={cita.id} className="rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-md shadow-slate-200/60">
+                                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-400">
+                                        <span>{new Date(cita.fecha).toLocaleDateString('es-ES')}</span>
+                                        <span>{cita.hora}</span>
+                                    </div>
+                                    <div className="mt-4 space-y-3 text-sm text-slate-700">
+                                        <p className="font-semibold text-slate-800">{cita.especializacion_nombre}</p>
+                                        <p>Médico: <span className="font-medium">{cita.medico_nombre} {cita.medico_apellido}</span></p>
+                                        <p className="text-slate-500">Motivo: {cita.motivo}</p>
+                                    </div>
+                                    <div className="mt-4 flex items-center justify-between">
+                                        <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${getEstadoColor(cita.estado)}`}>
+                                            {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
+                                        </span>
+                                        {cita.estado === 'pendiente' && (
+                                            <button
+                                                onClick={() => handleCancelCita(cita.id)}
+                                                className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white shadow-sm shadow-rose-200/60 transition hover:bg-rose-600"
+                                            >
+                                                Cancelar
+                                            </button>
+                                        )}
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
@@ -431,7 +462,7 @@ const MisCitas = () => {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {citas.map((cita) => (
-                                        <tr key={cita.id} className="hover:bg-blue-50 transition-colors">
+                                        <tr key={cita.id} className="transition-colors">
                                             <td className="py-4 px-6 text-sm text-gray-900">
                                                 {new Date(cita.fecha).toLocaleDateString('es-ES')}
                                             </td>
@@ -448,7 +479,7 @@ const MisCitas = () => {
                                                 {cita.motivo}
                                             </td>
                                             <td className="py-4 px-6">
-                                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getEstadoColor(cita.estado)}`}>
+                                                <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${getEstadoColor(cita.estado)}`}>
                                                     {cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)}
                                                 </span>
                                             </td>
@@ -456,7 +487,7 @@ const MisCitas = () => {
                                                 {cita.estado === 'pendiente' && (
                                                     <button
                                                         onClick={() => handleCancelCita(cita.id)}
-                                                        className="bg-red-600 text-white font-semibold px-3 py-1 rounded-full shadow-lg hover:bg-red-700 cursor-pointer"
+                                                        className="rounded-full bg-rose-500 px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-rose-200/60 transition hover:bg-rose-600 cursor-pointer"
                                                     >
                                                         Cancelar
                                                     </button>
