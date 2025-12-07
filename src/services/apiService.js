@@ -120,5 +120,21 @@ export const apiService = {
     getHistorial: async () => {
         const response = await api.get('/historial');
         return response.data;
+    },
+
+    // ABMUsuarios
+    getAllUsers: async () => {
+        const response = await api.get('/users');
+        return response.data;
+    },
+
+    updateUser: async (userId, userData) => {
+        const response = await api.put(`/users/${userId}`, userData);
+        return response.data;
+    },
+
+    createAdminUser: async (userData) => {
+        const response = await api.post('/users/admin', userData);
+        return response.data;
     }
 };

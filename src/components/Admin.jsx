@@ -1,4 +1,5 @@
 import ListEspecialidades from "./listEspecialidades";
+import ABMUsuarios from "./ABMUsuarios";
 import { useAuth } from '../context/AuthContext';
 import SinAuth from "./SinAuth";
 
@@ -12,6 +13,7 @@ const Admin = () => {
         <h3 className="text-lg font-semibold mb-2">ABM especializaciones</h3>
         <p className="mb-4">Desde este panel vas a poder gestionar las especializaciones médicas.</p>
         <ListEspecialidades />
+        <ABMUsuarios />
       </div>
     );
   }
